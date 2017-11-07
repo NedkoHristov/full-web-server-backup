@@ -2,6 +2,7 @@
 
 # BEGIN CONFIGURATION ==========================================================
 
+THE_DATE="$(date '+%Y-%m-%d')"
 BACKUP_DIR="/var/www/backup/full_backup/$THE_DATE"  # The directory in which you want backups placed
 DUMP_MYSQL=true
 TAR_SITES=true
@@ -18,7 +19,6 @@ ETC_DIR="/etc/"
 ETC_BACKUP_DIR="$BACKUP_DIR/$THE_DATE-etc/"
 
 # You probably won't have to change these
-THE_DATE="$(date '+%Y-%m-%d')"
 
 MYSQL_PATH="$(which mysql)"
 MYSQLDUMP_PATH="$(which mysqldump)"
