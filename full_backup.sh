@@ -26,7 +26,6 @@ MYSQL_PATH="$(which mysql)"
 MYSQLDUMP_PATH="$(which mysqldump)"
 FIND_PATH="$(which find)"
 TAR_PATH="$(which tar)"
-RSYNC_PATH="$(which rsync)"
 
 # END CONFIGURATION ============================================================
 
