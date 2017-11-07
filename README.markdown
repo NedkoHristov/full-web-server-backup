@@ -61,21 +61,7 @@ NOTE: The BACKUP\_DIR setting is preset to /backups/site-backups. If you want to
 * __TAR\_PATH__: Path to tar. It's preset to: `"$(which tar)"`
 * __RSYNC\_PATH__: Path to rsync. It's preset to: `"$(which rsync)"`
 
-# Running with cron (recommended)
+# TODOs
 
-Once you've tested the script, I recommend setting it up to be run every night with cron. Here's a sample cron config:
-
-    SHELL=/bin/bash
-    PATH=/sbin:/bin:/usr/sbin:/usr/bin:/usr/local/bin:/usr/local/sbin
-    MAILTO=jason@example.com
-    HOME=/root
-
-    30 4 * * * root /opt/full-web-server-backup/backup.sh
-    
-That'll run the script (located in /usr/local) at 4:30 every morning and email the output to jason@example.com.
-
-If you want to only receive emails about errors, you can use:
-
-    30 4 * * * root /usr/local/web-server-backup/backup.sh > /dev/null
-
-So, take the above example, change the email address, etc., save it to a text file, and place it in `/etc/cron.d/`. That should do it.
+* Cron;
+* External password file usage (in ~/.my.cnf)
