@@ -1,34 +1,30 @@
-# Web Server Backup Script (now with S3 sync)
+# Web Server Backup Script
 
-This is a bash script for backing up multiple web sites and MySQL databases into a specified backups directory. It's a good idea to run it every night via cron.
+This is a bash script for backing up multiple web sites, MySQL databases and /etc/ into a specified backups directory.
 
 Once configured (variables set within the script), it does this:
 
-* Creates a directory for your site (file) backups (if it doesn't exist)
-* Creates a directory for your MySQL dumps (if it doesn't exist)
-* Loops through all of your MySQL databases and dumps each one of them to a gzipped file
-* Deletes database dumps older than a specified number of days from the backup directory
-* Tars and gzips each folder within your sites directory (I keep my websites in /var/www/sites/)
-* Deletes site archives older than a specified number of days from the backup directory
-* Optionally syncs all backup files to Amazon S3 or a remote server, using s3sync.rb or rsync respectively
+* Creates a directory for your site (file) backups (if it doesn't exist) with option for exclude;
+* Creates a directory for your MySQL dumps (if it doesn't exist);
+* Loops through all of your MySQL databases and dumps each one of them to a gzipped file;
+* Creates a directory for your configurations (/etc/) (if it doesn't exist);
+* Tars and gzips each folder within your sites directory (I keep my websites in /var/www/html/).
 
 # BETA WARNING
 
-___This script works fine for me (using Ubuntu 8.04 on Slicehost), but servers vary greatly. USE THIS SCRIPT AT YOUR OWN RISK!! There is always risk involved with running a script. I AM NOT RESPONSIBLE FOR DAMAGE CAUSED BY THIS SCRIPT.___
+___This script works fine for me (using  Ubuntu 16.04.3 LTS on Vultr and selfhosted), but servers vary greatly. USE THIS SCRIPT AT YOUR OWN RISK! There is always risk involved with running a script. I AM NOT RESPONSIBLE FOR DAMAGE CAUSED BY THIS SCRIPT.
+For this reason I removed the delete functionality from the project I forked. ___
 
 You may very well know more about bash scripting and archiving than I do. If you find any flaws with this script or have any recommendations as to how this script can be improved, please fork it and send me a pull request.
 
 # Installation
 
 * __MOST IMPORTANTLY:__ Open the backup.sh file in a text editor and set the configuration variables at the top (see below).
-* Optionally, edit the tar command on line 91 to add some more --exclude options (e.g. --exclude="cache/*")
-* Place the backup.sh file somewhere on your server (something like /usr/local/web-server-backup).
-* Make sure the backup.sh script is owned by root: `sudo chown -R 0:0 /usr/local/web-server-backup`
-* Make sure the backup.sh script is executable by root: `sudo chmod 744 /usr/local/web-server-backup/backup.sh`
-* Set up your Amazon S3 account and bucket (or a remote account for rsync)
-* Set up s3sync (see below)
+* Optionally, edit the tar command on line 97 to add some more --exclude options (e.g. --exclude="cache/*")
+* Place the backup.sh file somewhere on your server (something like /opt/full-web-server-backup).
+* Make sure the backup.sh script is executable by root: `sudo chmod 744 /opt/full-web-server-backup/backup.sh`
 * Preferably set up cron to run it every night (see below).
-    
+
 # Configuration
 
 There are a bunch of variables that you can set to customize the way the script works. _Some of them __must__ be set before running the script!_
@@ -50,34 +46,12 @@ NOTE: The BACKUP\_DIR setting is preset to /backups/site-backups. If you want to
 
 ## Web Site Settings:
 
-* __SITES\_DIR__: This is the directory where you keep all of your web sites. It's preset to: `"/var/www/sites/"`
+* __SITES\_DIR__: This is the directory where you keep all of your web sites. It's preset to: `"/var/www/html/"`
 * __SITES\_BACKUP\_DIR__: The directory in which the archived site files will be placed. It's preset to: `"$BACKUP_DIR/sites/"`
-
-## S3sync Settings (recommended):
-
-You can sync to an Amazon S3 bucket, but you'll need to install s3sync.rb first. [Get it from here.](http://s3sync.net/) It is a Ruby script, so you'll need to make sure you have Ruby installed.
-
-The only thing tricky about getting s3sync.rb installed is the CA certificates. If you are on Ubuntu, you can install the ca-certificates package with apt-get or aptitude. You need those certificates to connect to S3 securely (SSL).
-
-* __S3SYNC_PATH__: Wherever you installed s3sync.rb. It's preset to: `"/usr/local/s3sync/s3sync.rb"`
-* __S3\_BUCKET__: The name of the bucket to which you wish to sync.
-* __AWS\_ACCESS\_KEY_ID__: Log in to your Amazon AWS account to get this.
-* __AWS\_SECRET\_ACCESS_KEY__: Log in to your Amazon AWS account to get this.
-* __USE\_SSL__: If this is set to `"true"`, s3sync will use a secure connection to S3, but you'll need to set the SSL\_CERT\_DIR or SSL\_CERT\_FILE to make it work. See the s3sync README for more info.
-* __SSL\_CERT\_DIR__: Where your Cert Authority keys live. It's preset to: `"/etc/ssl/certs"`
-* __SSL\_CERT\_FILE__: If you have just one PEM file for CA verification, you can use this instead of SSL\_CERT\_DIR.
-
-## Rsync Settings (alternative to S3):
-
-* __RSYNC__: Whether or not you want to rsync the backups to another server. (Either "true" or "false") It's preset to: `"true"`
-* __RSYNC\_USER__: The user account name on the remote server. Please note that there is no password setting. It is recommended that you use an SSH key. ___You'll need to set this yourself!___
-* __RSYNC\_SERVER__: The server address of the remote server. ___You'll need to set this yourself!___ It's preset to: `"other.server.com"`
-* __RSYNC\_DIR__: The directory on the remote server that will be synchronized with $BACKUP\_DIR. It's preset to: `"web_site_backups"`
-* __RSYNC\_PORT__: If you have set a custom SSH port on your remote server, you'll need to change this. It's preset to: `"22"`
 
 ## Date format: (change if you want)
 
-* __THE\_DATE__: The date that will be appended to filenames. It's preset to: `"$(date '+%Y-%m-%d')"`
+* __THE\_DATE__: The date that will be appended to filenames. It's preset to: `"$(date '+%Y-%m-%d')"` (2017-11-07)
 
 ## Paths to commands: (probably won't need to change these)
 
@@ -96,7 +70,7 @@ Once you've tested the script, I recommend setting it up to be run every night w
     MAILTO=jason@example.com
     HOME=/root
 
-    30 4 * * * root /usr/local/web-server-backup/backup.sh
+    30 4 * * * root /opt/full-web-server-backup/backup.sh
     
 That'll run the script (located in /usr/local) at 4:30 every morning and email the output to jason@example.com.
 
