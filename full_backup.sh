@@ -2,11 +2,9 @@
 
 # BEGIN CONFIGURATION ==========================================================
 
-# You probably won't have to change these
-
 BACKUP_DIR="/var/www/backup/full_backup/$THE_DATE"  # The directory in which you want backups placed
 DUMP_MYSQL=true
-TAR_SITES=false
+TAR_SITES=true
 ETC_BACKUP=true
 
 MYSQL_HOST="localhost"
