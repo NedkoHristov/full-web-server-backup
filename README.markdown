@@ -64,4 +64,6 @@ NOTE: The BACKUP\_DIR setting is preset to /backups/site-backups. If you want to
 # TODOs
 
 * Cron;
-* External password file usage (in ~/.my.cnf)
+* External password file usage (in ~/.my.cnf);
+* Define compression level for each task (mySQL, DB, configuration);
+* Include only directories (for example archive only /etc/nginx and /etc/mySQL directories).
