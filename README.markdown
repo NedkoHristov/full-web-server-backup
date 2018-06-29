@@ -66,4 +66,5 @@ NOTE: The BACKUP\_DIR setting is preset to /backups/site-backups. If you want to
 * Cron;
 * External password file usage (in ~/.my.cnf);
 * Define compression level for each task (mySQL, DB, configuration);
-* Include only directories (for example archive only /etc/nginx and /etc/mySQL directories).
+* Include/exclude specific directories (for example archive only /etc/nginx and /etc/mySQL directories);
+* Keep n number of files *or* add verification for disk space + email to admin if disk is low on space.
